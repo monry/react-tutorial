@@ -2,9 +2,7 @@ import React from "react";
 import {Model} from "./Model";
 
 type Props = {
-    step: {
-        squares: Model.Player[],
-    },
+    step: Model.History,
     move: number,
     onClick: () => void,
 }
@@ -12,7 +10,7 @@ type Props = {
 export class History extends React.Component<Props> {
     render() {
         const description = this.props.move > 0 ?
-            `Go to move #${this.props.move}` :
+            `Go to move #${this.props.move} (${this.props.step.col}, ${this.props.step.row})` :
             'Go to game start';
 
         return (
