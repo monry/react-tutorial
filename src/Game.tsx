@@ -1,14 +1,10 @@
 import React from 'react';
 import {Board} from "./Board";
-import {Player} from "./types";
 import {History} from "./History";
+import {Model} from './Model';
 
 type State = {
-    history: {
-        squares: Player[],
-        col: number | null,
-        row: number | null,
-    }[],
+    history: Model.History[],
     stepNumber: number,
     xIsNext: boolean,
 };
@@ -17,8 +13,8 @@ export class Game extends React.Component<{}, State> {
     state: State = {
         history: [{
             squares: Array(9).fill(null),
-            col: null,
-            row: null,
+            col: undefined,
+            row: undefined,
         }],
         stepNumber: 0,
         xIsNext: true,
@@ -89,7 +85,7 @@ export class Game extends React.Component<{}, State> {
     }
 }
 
-function calculateWinner(squares: Player[]): Player {
+function calculateWinner(squares: Model.Player[]): Model.Player {
     const lines = [
         [0, 1, 2],
         [3, 4, 5],

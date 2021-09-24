@@ -1,9 +1,9 @@
 import React from "react";
-import {Player} from "./types";
+import {Model} from "./Model";
 
 type Props = {
     step: {
-        squares: Player[],
+        squares: Model.Player[],
     },
     move: number,
     onClick: () => void,

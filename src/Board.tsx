@@ -1,9 +1,9 @@
 import React from "react";
+import {Model} from "./Model";
 import {Square} from "./Square";
-import {Player} from "./types";
 
 type Props = {
-    squares: Player[],
+    squares: Model.Player[],
     onClick: (i: number) => void,
 };
 

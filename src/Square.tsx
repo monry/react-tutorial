@@ -1,8 +1,8 @@
 import React from "react";
-import {Player} from "./types";
+import {Model} from "./Model";
 
 type Props = {
-    value: Player,
+    value: Model.Player,
     onClick: () => void,
 }
 
