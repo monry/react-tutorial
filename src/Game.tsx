@@ -6,7 +6,7 @@ import Enumerable from "linq";
 import {Utility} from "./Utility";
 
 type State = {
-    history: Model.History[],
+    histories: Model.History[],
     stepNumber: number,
     ascendingSort: boolean,
     xIsNext: boolean,
@@ -14,7 +14,7 @@ type State = {
 
 export class Game extends React.Component<{}, State> {
     state: State = {
-        history: [{
+        histories: [{
             squares: Array(9).fill(null),
             filled: false,
         }],
@@ -24,10 +24,10 @@ export class Game extends React.Component<{}, State> {
     };
 
     render() {
-        const history = this.state.history;
-        const current = history[this.state.stepNumber];
+        const histories = this.state.histories;
+        const current = histories[this.state.stepNumber];
         const winner = calculateWinner(current.squares);
-        const sortedHistory = Enumerable.from(history)
+        const sortedHistories = Enumerable.from(histories)
             .orderBy(
                 (x): number => x.filled ? x.row * 3 + x.col : -1,
                 (a, b) => this.state.ascendingSort ? Utility.compareNumber(a, b) : Utility.compareNumber(b, a)
@@ -57,12 +57,12 @@ export class Game extends React.Component<{}, State> {
                         <button onClick={() => this.toggleSort(false)} disabled={!this.state.ascendingSort}>Desc</button>
                     </div>
                     <ol>
-                        {sortedHistory.map(
+                        {sortedHistories.map(
                             (step, move) =>
                                 <History
                                     key={move}
                                     step={step}
-                                    move={this.state.ascendingSort ? move : history.length - move - 1}
+                                    move={this.state.ascendingSort ? move : histories.length - move - 1}
                                     isCurrent={move === this.state.stepNumber}
                                     onClick={() => this.jumpTo(move)}
                                 />
@@ -87,7 +87,7 @@ export class Game extends React.Component<{}, State> {
     }
 
     private handleClick(i: number) {
-        const history = this.state.history.slice(0, this.state.stepNumber + 1);
+        const history = this.state.histories.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
         if (calculateWinner(squares) !== null || squares[i] !== null) {
@@ -95,7 +95,7 @@ export class Game extends React.Component<{}, State> {
         }
         squares[i] = this.state.xIsNext ? 'X' : 'O';
         this.setState({
-            history: history.concat([{
+            histories: history.concat([{
                 squares: squares,
                 col: i % 3,
                 row: Math.floor(i / 3),
