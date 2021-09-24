@@ -12,9 +12,9 @@ export class Board extends React.Component<Props> {
         return (
             <div>
                 {[0, 1, 2].map((rowIndex) => (
-                    <div className="board-row">
+                    <div key={rowIndex} className="board-row">
                         {[0, 1, 2].map((columnIndex) => (
-                            this.renderSquare(rowIndex * 3 + columnIndex)
+                            this.renderSquare(rowIndex, columnIndex)
                         ))}
                     </div>
                 ))}
@@ -22,11 +22,13 @@ export class Board extends React.Component<Props> {
         );
     }
 
-    private renderSquare(i: number) {
+    private renderSquare(rowIndex: number, columnIndex: number) {
+        const index = rowIndex * 3 + columnIndex;
         return (
             <Square
-                value={this.props.squares[i]}
-                onClick={() => this.props.onClick(i)}
+                key={`${rowIndex}-${columnIndex}`}
+                value={this.props.squares[index]}
+                onClick={() => this.props.onClick(index)}
             />
         );
     }
