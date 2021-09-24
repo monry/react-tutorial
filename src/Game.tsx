@@ -1,17 +1,25 @@
 import React from 'react';
 import {Board} from "./Board";
-import {Player} from "./Player";
+import {Player} from "./types";
 import {History} from "./History";
 
 type State = {
-    history: {squares: Player[]}[],
+    history: {
+        squares: Player[],
+        col: number | null,
+        row: number | null,
+    }[],
     stepNumber: number,
     xIsNext: boolean,
 };
 
 export class Game extends React.Component<{}, State> {
     state: State = {
-        history: [{squares: Array(9).fill(null)}],
+        history: [{
+            squares: Array(9).fill(null),
+            col: null,
+            row: null,
+        }],
         stepNumber: 0,
         xIsNext: true,
     };
@@ -72,6 +80,8 @@ export class Game extends React.Component<{}, State> {
         this.setState({
             history: history.concat([{
                 squares: squares,
+                col: i % 3,
+                row: Math.floor(i / 3)
             }]),
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext,

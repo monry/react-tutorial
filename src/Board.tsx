@@ -1,6 +1,6 @@
 import React from "react";
 import {Square} from "./Square";
-import {Player} from "./Player";
+import {Player} from "./types";
 
 type Props = {
     squares: Player[],
