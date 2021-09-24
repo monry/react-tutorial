@@ -2,10 +2,13 @@ import React from 'react';
 import {Board} from "./Board";
 import {History} from "./History";
 import {Model} from './Model';
+import Enumerable from "linq";
+import {Utility} from "./Utility";
 
 type State = {
     history: Model.History[],
     stepNumber: number,
+    ascendingSort: boolean,
     xIsNext: boolean,
 };
 
@@ -13,10 +16,10 @@ export class Game extends React.Component<{}, State> {
     state: State = {
         history: [{
             squares: Array(9).fill(null),
-            col: undefined,
-            row: undefined,
+            filled: false,
         }],
         stepNumber: 0,
+        ascendingSort: true,
         xIsNext: true,
     };
 
@@ -24,6 +27,12 @@ export class Game extends React.Component<{}, State> {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares);
+        const sortedHistory = Enumerable.from(history)
+            .orderBy(
+                (x): number => x.filled ? x.row * 3 + x.col : -1,
+                (a, b) => this.state.ascendingSort ? Utility.compareNumber(a, b) : Utility.compareNumber(b, a)
+            )
+            .toArray();
 
         let status: string;
         if (winner != null) {
@@ -42,13 +51,18 @@ export class Game extends React.Component<{}, State> {
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
+                    <div>
+                        Sort:
+                        <button onClick={() => this.toggleSort(true)} disabled={this.state.ascendingSort}>Asc</button>
+                        <button onClick={() => this.toggleSort(false)} disabled={!this.state.ascendingSort}>Desc</button>
+                    </div>
                     <ol>
-                        {history.map(
+                        {sortedHistory.map(
                             (step, move) =>
                                 <History
                                     key={move}
                                     step={step}
-                                    move={move}
+                                    move={this.state.ascendingSort ? move : history.length - move - 1}
                                     isCurrent={move === this.state.stepNumber}
                                     onClick={() => this.jumpTo(move)}
                                 />
@@ -66,6 +80,12 @@ export class Game extends React.Component<{}, State> {
         });
     }
 
+    private toggleSort(ascendingSort: boolean) {
+        this.setState({
+            ascendingSort: ascendingSort,
+        });
+    }
+
     private handleClick(i: number) {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
@@ -78,7 +98,8 @@ export class Game extends React.Component<{}, State> {
             history: history.concat([{
                 squares: squares,
                 col: i % 3,
-                row: Math.floor(i / 3)
+                row: Math.floor(i / 3),
+                filled: true,
             }]),
             stepNumber: history.length,
             xIsNext: !this.state.xIsNext,
