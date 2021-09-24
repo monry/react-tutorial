@@ -3,7 +3,8 @@ import {Model} from "./Model";
 import {Square} from "./Square";
 
 type Props = {
-    squares: Model.Player[],
+    cells: Model.Cell[],
+    causeOfVictoryCells?: Model.Cell[],
     onClick: (i: number) => void,
 };
 
@@ -27,7 +28,8 @@ export class Board extends React.Component<Props> {
         return (
             <Square
                 key={`${rowIndex}-${columnIndex}`}
-                value={this.props.squares[index]}
+                cell={this.props.cells[index]}
+                causeOfVictoryCells={this.props.causeOfVictoryCells}
                 onClick={() => this.props.onClick(index)}
             />
         );

@@ -1,17 +1,20 @@
-export type Player = string | null | undefined;
-// export type History = {
-//     squares: Player[],
-//     col: number | undefined,
-//     row: number | undefined,
-// };
+export type Player = string | undefined;
+export type Cell = {
+    player?: Player,
+}
 export type FilledHistory = {
-    squares: Player[],
+    cells: Cell[],
     col: number,
     row: number,
     filled: true,
 }
 export type EmptyHistory = {
-    squares: Player[],
+    cells: Cell[],
     filled: false,
+}
+export type GameResult = {
+    endOfTheGame: boolean,
+    winner?: Player,
+    causeOfVictoryCells?: Cell[],
 }
 export type History = FilledHistory | EmptyHistory;
