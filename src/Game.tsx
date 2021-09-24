@@ -49,6 +49,7 @@ export class Game extends React.Component<{}, State> {
                                     key={move}
                                     step={step}
                                     move={move}
+                                    isCurrent={move === this.state.stepNumber}
                                     onClick={() => this.jumpTo(move)}
                                 />
                         )}

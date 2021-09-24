@@ -4,6 +4,7 @@ import {Model} from "./Model";
 type Props = {
     step: Model.History,
     move: number,
+    isCurrent: boolean,
     onClick: () => void,
 }
 
@@ -15,7 +16,10 @@ export class History extends React.Component<Props> {
 
         return (
             <li>
-                <button onClick={this.props.onClick}>{description}</button>
+                <button
+                    onClick={this.props.onClick}
+                    className={this.props.isCurrent ? 'current' : undefined} // ココもう少し綺麗に書きたいなぁ…
+                >{description}</button>
             </li>
         );
     }
