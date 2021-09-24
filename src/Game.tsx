@@ -1,6 +1,7 @@
 import React from 'react';
 import {Board} from "./Board";
 import {Player} from "./Player";
+import {History} from "./History";
 
 type State = {
     history: {squares: Player[]}[],
@@ -20,17 +21,6 @@ export class Game extends React.Component<{}, State> {
         const current = history[this.state.stepNumber];
         const winner = calculateWinner(current.squares);
 
-        const moves = history.map((step, move) => {
-            const description = move > 0 ?
-                `Go to move #${move}` :
-                'Go to game start';
-            return (
-                <li key={move}>
-                    <button onClick={() => this.jumpTo(move)}>{description}</button>
-                </li>
-            );
-        });
-
         let status: string;
         if (winner != null) {
             status = `Winner: ${winner}`;
@@ -48,7 +38,17 @@ export class Game extends React.Component<{}, State> {
                 </div>
                 <div className="game-info">
                     <div>{status}</div>
-                    <ol>{moves}</ol>
+                    <ol>
+                        {history.map(
+                            (step, move) =>
+                                <History
+                                    key={move}
+                                    step={step}
+                                    move={move}
+                                    onClick={() => this.jumpTo(move)}
+                                />
+                        )}
+                    </ol>
                 </div>
             </div>
         );
