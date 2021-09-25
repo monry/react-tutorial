@@ -40,7 +40,9 @@ export class Game extends React.Component<{}, State> {
             .toArray();
 
         let status: string;
-        if (winner != null) {
+        if (this.state.gameResult.endOfTheGame && this.state.gameResult.winner == null) {
+            status = 'Draw'
+        } else if (this.state.gameResult.endOfTheGame && winner != null) {
             status = `Winner: ${winner}`;
         } else {
             status = `Next player: ${this.state.xIsNext ? 'X' : 'O'}`;
@@ -124,6 +126,10 @@ export class Game extends React.Component<{}, State> {
             gameResult.endOfTheGame = true;
             gameResult.winner = winner;
             gameResult.causeOfVictoryCells = causeOfVictoryCells;
+        }
+
+        if (Enumerable.from(cells).all(x => x.player != null)) {
+            gameResult.endOfTheGame = true;
         }
 
         this.setState({
