@@ -65,7 +65,7 @@ export class Game extends React.Component<{}, State> {
                     </div>
                     <ol>
                         {sortedHistories.map(
-                            (history, index) =>
+                            (history) =>
                                 <History
                                     key={history.index}
                                     history={history}
