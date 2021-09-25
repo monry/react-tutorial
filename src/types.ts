@@ -3,12 +3,14 @@ export type Cell = {
     player?: Player,
 }
 export type FilledHistory = {
+    index: number,
     cells: Cell[],
     col: number,
     row: number,
     filled: true,
 }
 export type EmptyHistory = {
+    index: number,
     cells: Cell[],
     filled: false,
 }

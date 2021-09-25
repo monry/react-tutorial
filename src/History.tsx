@@ -2,15 +2,15 @@ import React from "react";
 import {Model} from "./Model";
 
 type Props = {
-    step: Model.History,
-    move: number,
+    history: Model.History,
+    index: number,
     isCurrent: boolean,
     onClick: () => void,
 }
 
 export function History(props: Props) {
-    const description = props.step.filled ?
-        `Go to move #${props.move} (${props.step.col}, ${props.step.row})` :
+    const description = props.history.filled ?
+        `Go to move #${props.index} (${props.history.col}, ${props.history.row})` :
         'Go to game start';
 
     return (

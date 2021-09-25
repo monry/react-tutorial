@@ -7,7 +7,7 @@ import {Utility} from "./Utility";
 
 type State = {
     histories: Model.History[],
-    stepNumber: number,
+    historyIndex: number,
     ascendingSort: boolean,
     xIsNext: boolean,
     gameResult: Model.GameResult,
@@ -16,10 +16,11 @@ type State = {
 export class Game extends React.Component<{}, State> {
     state: State = {
         histories: [{
+            index: 0,
             cells: Array<Model.Cell>(9).fill({}),
             filled: false,
         }],
-        stepNumber: 0,
+        historyIndex: 0,
         ascendingSort: true,
         xIsNext: true,
         gameResult: {
@@ -29,11 +30,11 @@ export class Game extends React.Component<{}, State> {
 
     render() {
         const histories = this.state.histories;
-        const current = histories[this.state.stepNumber];
+        const current = histories[this.state.historyIndex];
         const [winner,] = calculateWinner(current.cells);
         const sortedHistories = Enumerable.from(histories)
             .orderBy(
-                (x): number => x.filled ? x.row * 3 + x.col : -1,
+                (x): number => x.index,
                 (a, b) => this.state.ascendingSort ? Utility.compareNumber(a, b) : Utility.compareNumber(b, a)
             )
             .toArray();
@@ -64,13 +65,13 @@ export class Game extends React.Component<{}, State> {
                     </div>
                     <ol>
                         {sortedHistories.map(
-                            (step, move) =>
+                            (history, index) =>
                                 <History
-                                    key={move}
-                                    step={step}
-                                    move={this.state.ascendingSort ? move : histories.length - move - 1}
-                                    isCurrent={(this.state.ascendingSort ? move : histories.length - move - 1) === this.state.stepNumber}
-                                    onClick={() => this.jumpTo(move)}
+                                    key={history.index}
+                                    history={history}
+                                    index={history.index}
+                                    isCurrent={history.index === this.state.historyIndex}
+                                    onClick={() => this.jumpTo(history.index)}
                                 />
                         )}
                     </ol>
@@ -93,7 +94,7 @@ export class Game extends React.Component<{}, State> {
             gameResult.causeOfVictoryCells = undefined;
         }
         this.setState({
-            stepNumber: step,
+            historyIndex: step,
             xIsNext: step % 2 === 0,
             gameResult: gameResult,
         });
@@ -106,8 +107,8 @@ export class Game extends React.Component<{}, State> {
     }
 
     private handleClick(i: number) {
-        const history = this.state.histories.slice(0, this.state.stepNumber + 1);
-        const current = history[history.length - 1];
+        const histories = this.state.histories.slice(0, this.state.historyIndex + 1);
+        const current = histories[histories.length - 1];
         const cells = current.cells.slice();
         const gameResult = {...this.state.gameResult};
         if (gameResult.endOfTheGame || cells[i].player != null) {
@@ -126,13 +127,14 @@ export class Game extends React.Component<{}, State> {
         }
 
         this.setState({
-            histories: history.concat([{
+            histories: histories.concat([{
+                index: histories.length,
                 cells: cells,
                 col: i % 3,
                 row: Math.floor(i / 3),
                 filled: true,
             }]),
-            stepNumber: history.length,
+            historyIndex: histories.length,
             gameResult: gameResult,
             xIsNext: !this.state.xIsNext,
         });
